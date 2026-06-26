@@ -1,71 +1,245 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Maker & Mark — Personalized Leather Goods, Engraved &amp; Stamped</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css">
-<link rel="stylesheet" href="css/listing.css">
-</head>
-<body>
+/* ============================================================
+   Listing Page — Hero + Product Grid
+   ============================================================ */
 
-<header class="site-header">
-  <div class="container site-header__inner">
-    <a href="index.html" class="site-logo">Maker <span>EST.</span> &amp; Mark</a>
-    <nav class="site-nav">
-      <a href="index.html" class="is-active-nav">Shop</a>
-      <a href="index.html?category=keychains">Keychains</a>
-      <a href="index.html?category=passport-holders">Passport Holders</a>
-      <a href="index.html?category=gift-sets">Gift Sets</a>
-    </nav>
-    <button class="cart-pill" id="cartButton">
-      🛍 Cart <span id="cartCount">0</span>
-    </button>
-  </div>
-</header>
+.is-active-nav {
+  color: var(--color-leather) !important;
+  font-weight: 700;
+}
 
-<section class="hero">
-  <div class="container hero__inner">
-    <div class="hero__eyebrow">Engraved · Foil Stamped · UV Printed</div>
-    <h1 class="hero__title">Every piece carries<br>a mark of its own.</h1>
-    <p class="hero__subtitle">
-      Leather goods and keepsakes, personalized one at a time — your name,
-      your initials, your story, pressed in.
-    </p>
-  </div>
-  <div class="hero__stamp-mark" aria-hidden="true">
-    <svg viewBox="0 0 120 120" fill="none">
-      <circle cx="60" cy="60" r="56" stroke="currentColor" stroke-width="1.5"/>
-      <circle cx="60" cy="60" r="44" stroke="currentColor" stroke-width="1"/>
-      <text x="60" y="56" text-anchor="middle" font-family="Fraunces, serif" font-size="13" fill="currentColor">PERSONALIZED</text>
-      <text x="60" y="72" text-anchor="middle" font-family="Fraunces, serif" font-size="13" fill="currentColor">BY HAND</text>
-    </svg>
-  </div>
-</section>
+/* --- Hero --- */
 
-<main class="container">
-  <div class="catalog-toolbar">
-    <div class="category-pills" id="categoryPills">
-      <button class="category-pill is-active" data-category="">All</button>
-      <!-- populated from /api/categories -->
-    </div>
-    <div class="result-count" id="resultCount"></div>
-  </div>
+.hero {
+  position: relative;
+  background: var(--color-parchment-deep);
+  border-bottom: 1px solid var(--color-line);
+  overflow: hidden;
+}
 
-  <div class="product-grid" id="productGrid">
-    <!-- populated by listing.js -->
-  </div>
-</main>
+.hero__inner {
+  padding: var(--space-2xl) var(--space-md) var(--space-xl);
+  max-width: 640px;
+}
 
-<footer class="site-footer">
-  <div class="container site-footer__inner">
-    <div class="site-logo">Maker <span>EST.</span> &amp; Mark</div>
-    <p class="site-footer__note">Personalized leather goods, engraved and stamped by hand. Placeholder shop name — final name pending.</p>
-  </div>
-</footer>
+.hero__eyebrow {
+  font-family: var(--font-utility);
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-brass);
+  font-weight: 600;
+  margin-bottom: var(--space-sm);
+}
 
-<script src="js/listing.js"></script>
-</body>
-</html>
+.hero__title {
+  font-size: 3.1rem;
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+}
+
+.hero__subtitle {
+  margin-top: var(--space-md);
+  font-size: 1.08rem;
+  color: var(--color-ink-soft);
+  max-width: 42ch;
+}
+
+/* The signature element: a wax-seal / stamp impression mark, rotated
+   slightly as if pressed onto the page at an angle -- ties the engraving/
+   foil-stamping subject matter directly into the page's own visual identity */
+.hero__stamp-mark {
+  position: absolute;
+  right: 6%;
+  top: 50%;
+  transform: translateY(-50%) rotate(-8deg);
+  color: var(--color-leather);
+  opacity: 0.16;
+  width: 220px;
+  height: 220px;
+}
+
+@media (max-width: 860px) {
+  .hero__title {
+    font-size: 2.2rem;
+  }
+  .hero__stamp-mark {
+    display: none;
+  }
+}
+
+/* --- Toolbar --- */
+
+.catalog-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  padding: var(--space-lg) 0 var(--space-md);
+}
+
+.category-pills {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.category-pill {
+  border: 1.5px solid var(--color-line);
+  background: var(--color-cream-card);
+  color: var(--color-ink-soft);
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  font-size: 0.84rem;
+  font-weight: 500;
+  transition: all 0.15s ease;
+}
+
+.category-pill:hover {
+  border-color: var(--color-brass-light);
+  color: var(--color-leather);
+}
+
+.category-pill.is-active {
+  background: var(--color-leather);
+  border-color: var(--color-leather);
+  color: var(--color-parchment);
+}
+
+.result-count {
+  font-family: var(--font-utility);
+  font-size: 0.78rem;
+  color: var(--color-ink-soft);
+}
+
+/* --- Product Grid --- */
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--space-md);
+  padding-bottom: var(--space-2xl);
+}
+
+.product-card {
+  background: var(--color-cream-card);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  display: block;
+  color: var(--color-ink);
+}
+
+.product-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-raised);
+}
+
+.product-card__image {
+  aspect-ratio: 1 / 1;
+  background: var(--color-parchment-deep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-ink-soft);
+  position: relative;
+  overflow: hidden;
+}
+
+.product-card__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product-card__image svg {
+  width: 36px;
+  height: 36px;
+  opacity: 0.35;
+}
+
+.product-card__featured-tag {
+  position: absolute;
+  top: 0.7rem;
+  left: 0.7rem;
+  background: var(--color-brass);
+  color: white;
+  font-family: var(--font-utility);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+}
+
+.product-card__body {
+  padding: var(--space-sm) var(--space-sm) var(--space-md);
+}
+
+.product-card__category {
+  font-family: var(--font-utility);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-brass);
+  font-weight: 600;
+}
+
+.product-card__title {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  color: var(--color-leather);
+  margin-top: 0.3rem;
+  line-height: 1.3;
+}
+
+.product-card__price {
+  font-family: var(--font-utility);
+  font-size: 0.92rem;
+  color: var(--color-ink);
+  margin-top: 0.5rem;
+  font-weight: 600;
+}
+
+.product-card__price .from-label {
+  font-family: var(--font-body);
+  font-weight: 400;
+  color: var(--color-ink-soft);
+  font-size: 0.78rem;
+}
+
+/* --- Empty state --- */
+
+.empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: var(--space-2xl) var(--space-md);
+  color: var(--color-ink-soft);
+}
+
+.empty-state h3 {
+  margin-bottom: 0.5rem;
+}
+
+/* --- Footer --- */
+
+.site-footer {
+  background: var(--color-parchment-deep);
+  border-top: 1px solid var(--color-line);
+  padding: var(--space-lg) 0;
+  margin-top: var(--space-xl);
+}
+
+.site-footer__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.site-footer__note {
+  font-size: 0.82rem;
+  color: var(--color-ink-soft);
+  margin: 0;
+}
