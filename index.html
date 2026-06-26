@@ -1,0 +1,351 @@
+-- Auto-generated import. Review before running against production D1.
+BEGIN TRANSACTION;
+INSERT OR IGNORE INTO categories (slug, name) VALUES ('keychains', 'Keychains');
+DELETE FROM products WHERE slug = 'engraved-leather-keychain';
+INSERT INTO products (slug, title, description, category_id, technique, base_price_cents, primary_image_url, featured, active)
+VALUES (
+  'engraved-leather-keychain', 'Personalized Engraved Leather Keychain', 'Full-grain leather keychain, custom engraved with a name, initials, or short message. A simple everyday gift that always lands.',
+  (SELECT id FROM categories WHERE name = 'Keychains'),
+  'engraving', 1600, NULL, 1, 1
+);
+INSERT INTO variant_option_types (product_id, name, sort_order)
+VALUES ((SELECT id FROM products WHERE slug = 'engraved-leather-keychain'), 'Color', 0);
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ((SELECT id FROM variant_option_types WHERE product_id = (SELECT id FROM products WHERE slug = 'engraved-leather-keychain') AND name = 'Color'), 'Black', 0);
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ((SELECT id FROM variant_option_types WHERE product_id = (SELECT id FROM products WHERE slug = 'engraved-leather-keychain') AND name = 'Color'), 'Brown', 1);
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ((SELECT id FROM variant_option_types WHERE product_id = (SELECT id FROM products WHERE slug = 'engraved-leather-keychain') AND name = 'Color'), 'Tan', 2);
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ((SELECT id FROM variant_option_types WHERE product_id = (SELECT id FROM products WHERE slug = 'engraved-leather-keychain') AND name = 'Color'), 'Navy', 3);
+INSERT INTO variant_option_types (product_id, name, sort_order)
+VALUES ((SELECT id FROM products WHERE slug = 'engraved-leather-keychain'), 'Shape', 1);
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ((SELECT id FROM variant_option_types WHERE product_id = (SELECT id FROM products WHERE slug = 'engraved-leather-keychain') AND name = 'Shape'), 'Round', 0);
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ((SELECT id FROM variant_option_types WHERE product_id = (SELECT id FROM products WHERE slug = 'engraved-leather-keychain') AND name = 'Shape'), 'Rectangle', 1);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'engraved-leather-keychain'), 'KEY-BLK-RND', '{"Color": "Black", "Shape": "Round"}', 0, 25);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'engraved-leather-keychain'), 'KEY-BLK-RECT', '{"Color": "Black", "Shape": "Rectangle"}', 0, 25);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'engraved-leather-keychain'), 'KEY-BRN-RND', '{"Color": "Brown", "Shape": "Round"}', 0, 25);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'engraved-leather-keychain'), 'KEY-BRN-RECT', '{"Color": "Brown", "Shape": "Rectangle"}', 0, 25);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'engraved-leather-keychain'), 'KEY-TAN-RND', '{"Color": "Tan", "Shape": "Round"}', 0, 20);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'engraved-leather-keychain'), 'KEY-TAN-RECT', '{"Color": "Tan", "Shape": "Rectangle"}', 0, 20);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'engraved-leather-keychain'), 'KEY-NVY-RND', '{"Color": "Navy", "Shape": "Round"}', 0, 15);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'engraved-leather-keychain'), 'KEY-NVY-RECT', '{"Color": "Navy", "Shape": "Rectangle"}', 0, 15);
+INSERT INTO personalization_fields (product_id, field_key, label, field_type, required, max_length, help_text, options, sort_order)
+VALUES ((SELECT id FROM products WHERE slug = 'engraved-leather-keychain'), 'engraved_name', 'Name or Text to Engrave', 'text',
+  1, 22,
+  'Letters, numbers, and basic punctuation only', NULL, 0);
+INSERT INTO add_ons (product_id, add_on_key, label, description, price_cents, requires_input, input_type, input_label, input_max_length, sort_order)
+VALUES ((SELECT id FROM products WHERE slug = 'engraved-leather-keychain'), 'back_engraving', 'Add Back Engraving', 'Add a date, short message, or second name on the back',
+  500, 1, 'text', 'Back Engraving Text',
+  22, 0);
+INSERT INTO add_ons (product_id, add_on_key, label, description, price_cents, requires_input, input_type, input_label, input_max_length, sort_order)
+VALUES ((SELECT id FROM products WHERE slug = 'engraved-leather-keychain'), 'gift_box', 'Add Gift Box', 'Arrives wrapped in a kraft gift box, ready to give',
+  400, 0, NULL, NULL,
+  NULL, 1);
+DELETE FROM products WHERE slug = 'occupational-engraved-keychain';
+INSERT INTO products (slug, title, description, category_id, technique, base_price_cents, primary_image_url, featured, active)
+VALUES (
+  'occupational-engraved-keychain', 'Occupational Engraved Keychain', 'Engraved keychain themed for a specific job or profession (nurse, teacher, electrician, and more), personalized with a name.',
+  (SELECT id FROM categories WHERE name = 'Keychains'),
+  'engraving', 1600, NULL, 0, 1
+);
+INSERT INTO variant_option_types (product_id, name, sort_order)
+VALUES ((SELECT id FROM products WHERE slug = 'occupational-engraved-keychain'), 'Profession', 0);
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ((SELECT id FROM variant_option_types WHERE product_id = (SELECT id FROM products WHERE slug = 'occupational-engraved-keychain') AND name = 'Profession'), 'Nurse', 0);
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ((SELECT id FROM variant_option_types WHERE product_id = (SELECT id FROM products WHERE slug = 'occupational-engraved-keychain') AND name = 'Profession'), 'Teacher', 1);
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ((SELECT id FROM variant_option_types WHERE product_id = (SELECT id FROM products WHERE slug = 'occupational-engraved-keychain') AND name = 'Profession'), 'Electrician', 2);
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ((SELECT id FROM variant_option_types WHERE product_id = (SELECT id FROM products WHERE slug = 'occupational-engraved-keychain') AND name = 'Profession'), 'Firefighter', 3);
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ((SELECT id FROM variant_option_types WHERE product_id = (SELECT id FROM products WHERE slug = 'occupational-engraved-keychain') AND name = 'Profession'), 'Police', 4);
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ((SELECT id FROM variant_option_types WHERE product_id = (SELECT id FROM products WHERE slug = 'occupational-engraved-keychain') AND name = 'Profession'), 'Plumber', 5);
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ((SELECT id FROM variant_option_types WHERE product_id = (SELECT id FROM products WHERE slug = 'occupational-engraved-keychain') AND name = 'Profession'), 'Mechanic', 6);
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ((SELECT id FROM variant_option_types WHERE product_id = (SELECT id FROM products WHERE slug = 'occupational-engraved-keychain') AND name = 'Profession'), 'Veterinarian', 7);
+INSERT INTO variant_option_types (product_id, name, sort_order)
+VALUES ((SELECT id FROM products WHERE slug = 'occupational-engraved-keychain'), 'Color', 1);
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ((SELECT id FROM variant_option_types WHERE product_id = (SELECT id FROM products WHERE slug = 'occupational-engraved-keychain') AND name = 'Color'), 'Black', 0);
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ((SELECT id FROM variant_option_types WHERE product_id = (SELECT id FROM products WHERE slug = 'occupational-engraved-keychain') AND name = 'Color'), 'Brown', 1);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'occupational-engraved-keychain'), 'OCC-NUR-BLK', '{"Profession": "Nurse", "Color": "Black"}', 0, 15);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'occupational-engraved-keychain'), 'OCC-NUR-BRN', '{"Profession": "Nurse", "Color": "Brown"}', 0, 15);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'occupational-engraved-keychain'), 'OCC-TEA-BLK', '{"Profession": "Teacher", "Color": "Black"}', 0, 15);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'occupational-engraved-keychain'), 'OCC-TEA-BRN', '{"Profession": "Teacher", "Color": "Brown"}', 0, 15);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'occupational-engraved-keychain'), 'OCC-ELEC-BLK', '{"Profession": "Electrician", "Color": "Black"}', 0, 10);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'occupational-engraved-keychain'), 'OCC-ELEC-BRN', '{"Profession": "Electrician", "Color": "Brown"}', 0, 10);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'occupational-engraved-keychain'), 'OCC-FIRE-BLK', '{"Profession": "Firefighter", "Color": "Black"}', 0, 10);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'occupational-engraved-keychain'), 'OCC-FIRE-BRN', '{"Profession": "Firefighter", "Color": "Brown"}', 0, 10);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'occupational-engraved-keychain'), 'OCC-POL-BLK', '{"Profession": "Police", "Color": "Black"}', 0, 10);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'occupational-engraved-keychain'), 'OCC-POL-BRN', '{"Profession": "Police", "Color": "Brown"}', 0, 10);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'occupational-engraved-keychain'), 'OCC-PLUMB-BLK', '{"Profession": "Plumber", "Color": "Black"}', 0, 10);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'occupational-engraved-keychain'), 'OCC-PLUMB-BRN', '{"Profession": "Plumber", "Color": "Brown"}', 0, 10);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'occupational-engraved-keychain'), 'OCC-MECH-BLK', '{"Profession": "Mechanic", "Color": "Black"}', 0, 10);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'occupational-engraved-keychain'), 'OCC-MECH-BRN', '{"Profession": "Mechanic", "Color": "Brown"}', 0, 10);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'occupational-engraved-keychain'), 'OCC-VET-BLK', '{"Profession": "Veterinarian", "Color": "Black"}', 0, 10);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'occupational-engraved-keychain'), 'OCC-VET-BRN', '{"Profession": "Veterinarian", "Color": "Brown"}', 0, 10);
+INSERT INTO personalization_fields (product_id, field_key, label, field_type, required, max_length, help_text, options, sort_order)
+VALUES ((SELECT id FROM products WHERE slug = 'occupational-engraved-keychain'), 'engraved_name', 'Name to Engrave', 'text',
+  1, 20,
+  'Letters and numbers only', NULL, 0);
+INSERT INTO add_ons (product_id, add_on_key, label, description, price_cents, requires_input, input_type, input_label, input_max_length, sort_order)
+VALUES ((SELECT id FROM products WHERE slug = 'occupational-engraved-keychain'), 'gift_box', 'Add Gift Box', 'Arrives wrapped in a kraft gift box, ready to give',
+  400, 0, NULL, NULL,
+  NULL, 0);
+INSERT OR IGNORE INTO categories (slug, name) VALUES ('passport-holders', 'Passport Holders');
+DELETE FROM products WHERE slug = 'foil-stamped-passport-holder';
+INSERT INTO products (slug, title, description, category_id, technique, base_price_cents, primary_image_url, featured, active)
+VALUES (
+  'foil-stamped-passport-holder', 'Foil-Stamped Leather Passport Holder', 'Genuine leather passport holder, hot foil stamped with a monogram or short name in gold, silver, or rose gold.',
+  (SELECT id FROM categories WHERE name = 'Passport Holders'),
+  'foil_stamp', 2600, NULL, 1, 1
+);
+INSERT INTO variant_option_types (product_id, name, sort_order)
+VALUES ((SELECT id FROM products WHERE slug = 'foil-stamped-passport-holder'), 'Leather Color', 0);
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ((SELECT id FROM variant_option_types WHERE product_id = (SELECT id FROM products WHERE slug = 'foil-stamped-passport-holder') AND name = 'Leather Color'), 'Black', 0);
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ((SELECT id FROM variant_option_types WHERE product_id = (SELECT id FROM products WHERE slug = 'foil-stamped-passport-holder') AND name = 'Leather Color'), 'Brown', 1);
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ((SELECT id FROM variant_option_types WHERE product_id = (SELECT id FROM products WHERE slug = 'foil-stamped-passport-holder') AND name = 'Leather Color'), 'Navy', 2);
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ((SELECT id FROM variant_option_types WHERE product_id = (SELECT id FROM products WHERE slug = 'foil-stamped-passport-holder') AND name = 'Leather Color'), 'Tan', 3);
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ((SELECT id FROM variant_option_types WHERE product_id = (SELECT id FROM products WHERE slug = 'foil-stamped-passport-holder') AND name = 'Leather Color'), 'Burgundy', 4);
+INSERT INTO variant_option_types (product_id, name, sort_order)
+VALUES ((SELECT id FROM products WHERE slug = 'foil-stamped-passport-holder'), 'Foil Color', 1);
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ((SELECT id FROM variant_option_types WHERE product_id = (SELECT id FROM products WHERE slug = 'foil-stamped-passport-holder') AND name = 'Foil Color'), 'Gold', 0);
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ((SELECT id FROM variant_option_types WHERE product_id = (SELECT id FROM products WHERE slug = 'foil-stamped-passport-holder') AND name = 'Foil Color'), 'Silver', 1);
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ((SELECT id FROM variant_option_types WHERE product_id = (SELECT id FROM products WHERE slug = 'foil-stamped-passport-holder') AND name = 'Foil Color'), 'Rose Gold', 2);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'foil-stamped-passport-holder'), 'PASS-BLK-GLD', '{"Leather Color": "Black", "Foil Color": "Gold"}', 0, 10);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'foil-stamped-passport-holder'), 'PASS-BLK-SLV', '{"Leather Color": "Black", "Foil Color": "Silver"}', 0, 10);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'foil-stamped-passport-holder'), 'PASS-BLK-RG', '{"Leather Color": "Black", "Foil Color": "Rose Gold"}', 0, 10);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'foil-stamped-passport-holder'), 'PASS-BRN-GLD', '{"Leather Color": "Brown", "Foil Color": "Gold"}', 0, 10);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'foil-stamped-passport-holder'), 'PASS-BRN-SLV', '{"Leather Color": "Brown", "Foil Color": "Silver"}', 0, 10);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'foil-stamped-passport-holder'), 'PASS-BRN-RG', '{"Leather Color": "Brown", "Foil Color": "Rose Gold"}', 0, 10);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'foil-stamped-passport-holder'), 'PASS-NVY-GLD', '{"Leather Color": "Navy", "Foil Color": "Gold"}', 0, 8);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'foil-stamped-passport-holder'), 'PASS-NVY-SLV', '{"Leather Color": "Navy", "Foil Color": "Silver"}', 0, 8);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'foil-stamped-passport-holder'), 'PASS-NVY-RG', '{"Leather Color": "Navy", "Foil Color": "Rose Gold"}', 0, 8);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'foil-stamped-passport-holder'), 'PASS-TAN-GLD', '{"Leather Color": "Tan", "Foil Color": "Gold"}', 0, 8);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'foil-stamped-passport-holder'), 'PASS-TAN-SLV', '{"Leather Color": "Tan", "Foil Color": "Silver"}', 0, 8);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'foil-stamped-passport-holder'), 'PASS-TAN-RG', '{"Leather Color": "Tan", "Foil Color": "Rose Gold"}', 0, 8);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'foil-stamped-passport-holder'), 'PASS-BUR-GLD', '{"Leather Color": "Burgundy", "Foil Color": "Gold"}', 0, 6);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'foil-stamped-passport-holder'), 'PASS-BUR-SLV', '{"Leather Color": "Burgundy", "Foil Color": "Silver"}', 0, 6);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'foil-stamped-passport-holder'), 'PASS-BUR-RG', '{"Leather Color": "Burgundy", "Foil Color": "Rose Gold"}', 0, 6);
+INSERT INTO personalization_fields (product_id, field_key, label, field_type, required, max_length, help_text, options, sort_order)
+VALUES ((SELECT id FROM products WHERE slug = 'foil-stamped-passport-holder'), 'monogram', 'Monogram (up to 3 letters)', 'text',
+  1, 3,
+  'Letters only, e.g. ABC', NULL, 0);
+INSERT INTO add_ons (product_id, add_on_key, label, description, price_cents, requires_input, input_type, input_label, input_max_length, sort_order)
+VALUES ((SELECT id FROM products WHERE slug = 'foil-stamped-passport-holder'), 'back_stamp', 'Add Back Stamping', 'Add a name or short phrase to the back panel',
+  600, 1, 'text', 'Back Stamp Text',
+  18, 0);
+INSERT INTO add_ons (product_id, add_on_key, label, description, price_cents, requires_input, input_type, input_label, input_max_length, sort_order)
+VALUES ((SELECT id FROM products WHERE slug = 'foil-stamped-passport-holder'), 'gift_box', 'Add Gift Box', 'Arrives wrapped in a kraft gift box, ready to give',
+  400, 0, NULL, NULL,
+  NULL, 1);
+INSERT OR IGNORE INTO categories (slug, name) VALUES ('luggage-tags', 'Luggage Tags');
+DELETE FROM products WHERE slug = 'leather-luggage-tag';
+INSERT INTO products (slug, title, description, category_id, technique, base_price_cents, primary_image_url, featured, active)
+VALUES (
+  'leather-luggage-tag', 'Personalized Leather Luggage Tag', 'Durable leather luggage tag, UV printed or foil stamped with a name and contact info window. Great for travel and as a matching set with the passport holder.',
+  (SELECT id FROM categories WHERE name = 'Luggage Tags'),
+  'uv_print', 1800, NULL, 1, 1
+);
+INSERT INTO variant_option_types (product_id, name, sort_order)
+VALUES ((SELECT id FROM products WHERE slug = 'leather-luggage-tag'), 'Color', 0);
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ((SELECT id FROM variant_option_types WHERE product_id = (SELECT id FROM products WHERE slug = 'leather-luggage-tag') AND name = 'Color'), 'Black', 0);
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ((SELECT id FROM variant_option_types WHERE product_id = (SELECT id FROM products WHERE slug = 'leather-luggage-tag') AND name = 'Color'), 'Brown', 1);
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ((SELECT id FROM variant_option_types WHERE product_id = (SELECT id FROM products WHERE slug = 'leather-luggage-tag') AND name = 'Color'), 'Tan', 2);
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ((SELECT id FROM variant_option_types WHERE product_id = (SELECT id FROM products WHERE slug = 'leather-luggage-tag') AND name = 'Color'), 'Navy', 3);
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ((SELECT id FROM variant_option_types WHERE product_id = (SELECT id FROM products WHERE slug = 'leather-luggage-tag') AND name = 'Color'), 'Burgundy', 4);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'leather-luggage-tag'), 'TAG-BLK', '{"Color": "Black"}', 0, 20);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'leather-luggage-tag'), 'TAG-BRN', '{"Color": "Brown"}', 0, 20);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'leather-luggage-tag'), 'TAG-TAN', '{"Color": "Tan"}', 0, 15);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'leather-luggage-tag'), 'TAG-NVY', '{"Color": "Navy"}', 0, 15);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'leather-luggage-tag'), 'TAG-BUR', '{"Color": "Burgundy"}', 0, 10);
+INSERT INTO personalization_fields (product_id, field_key, label, field_type, required, max_length, help_text, options, sort_order)
+VALUES ((SELECT id FROM products WHERE slug = 'leather-luggage-tag'), 'tag_name', 'Name on Tag', 'text',
+  1, 24,
+  'Appears on the front of the tag', NULL, 0);
+INSERT INTO personalization_fields (product_id, field_key, label, field_type, required, max_length, help_text, options, sort_order)
+VALUES ((SELECT id FROM products WHERE slug = 'leather-luggage-tag'), 'tag_contact', 'Contact Info (optional)', 'text',
+  0, 40,
+  'Phone or email, tucked inside the ID window', NULL, 1);
+INSERT INTO add_ons (product_id, add_on_key, label, description, price_cents, requires_input, input_type, input_label, input_max_length, sort_order)
+VALUES ((SELECT id FROM products WHERE slug = 'leather-luggage-tag'), 'gift_box', 'Add Gift Box', 'Arrives wrapped in a kraft gift box, ready to give',
+  400, 0, NULL, NULL,
+  NULL, 0);
+INSERT OR IGNORE INTO categories (slug, name) VALUES ('gift-sets', 'Gift Sets');
+DELETE FROM products WHERE slug = 'passport-luggage-tag-set';
+INSERT INTO products (slug, title, description, category_id, technique, base_price_cents, primary_image_url, featured, active)
+VALUES (
+  'passport-luggage-tag-set', 'Passport Holder + Luggage Tag Gift Set', 'Matching set: foil-stamped passport holder and UV-printed luggage tag in the same leather color, personalized together. Our most popular travel gift bundle.',
+  (SELECT id FROM categories WHERE name = 'Gift Sets'),
+  'foil_stamp', 4000, NULL, 1, 1
+);
+INSERT INTO variant_option_types (product_id, name, sort_order)
+VALUES ((SELECT id FROM products WHERE slug = 'passport-luggage-tag-set'), 'Leather Color', 0);
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ((SELECT id FROM variant_option_types WHERE product_id = (SELECT id FROM products WHERE slug = 'passport-luggage-tag-set') AND name = 'Leather Color'), 'Black', 0);
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ((SELECT id FROM variant_option_types WHERE product_id = (SELECT id FROM products WHERE slug = 'passport-luggage-tag-set') AND name = 'Leather Color'), 'Brown', 1);
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ((SELECT id FROM variant_option_types WHERE product_id = (SELECT id FROM products WHERE slug = 'passport-luggage-tag-set') AND name = 'Leather Color'), 'Navy', 2);
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ((SELECT id FROM variant_option_types WHERE product_id = (SELECT id FROM products WHERE slug = 'passport-luggage-tag-set') AND name = 'Leather Color'), 'Tan', 3);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'passport-luggage-tag-set'), 'SET-BLK', '{"Leather Color": "Black"}', 0, 12);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'passport-luggage-tag-set'), 'SET-BRN', '{"Leather Color": "Brown"}', 0, 12);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'passport-luggage-tag-set'), 'SET-NVY', '{"Leather Color": "Navy"}', 0, 8);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'passport-luggage-tag-set'), 'SET-TAN', '{"Leather Color": "Tan"}', 0, 8);
+INSERT INTO personalization_fields (product_id, field_key, label, field_type, required, max_length, help_text, options, sort_order)
+VALUES ((SELECT id FROM products WHERE slug = 'passport-luggage-tag-set'), 'monogram', 'Monogram for Passport Holder (up to 3 letters)', 'text',
+  1, 3,
+  'Letters only, e.g. ABC', NULL, 0);
+INSERT INTO personalization_fields (product_id, field_key, label, field_type, required, max_length, help_text, options, sort_order)
+VALUES ((SELECT id FROM products WHERE slug = 'passport-luggage-tag-set'), 'tag_name', 'Name on Luggage Tag', 'text',
+  1, 24,
+  'Appears on the front of the tag', NULL, 1);
+INSERT INTO add_ons (product_id, add_on_key, label, description, price_cents, requires_input, input_type, input_label, input_max_length, sort_order)
+VALUES ((SELECT id FROM products WHERE slug = 'passport-luggage-tag-set'), 'gift_box', 'Add Matching Gift Box', 'Both pieces arrive together in one branded gift box',
+  500, 0, NULL, NULL,
+  NULL, 0);
+INSERT OR IGNORE INTO categories (slug, name) VALUES ('candle-tins', 'Candle Tins');
+DELETE FROM products WHERE slug = 'uv-printed-candle-tin';
+INSERT INTO products (slug, title, description, category_id, technique, base_price_cents, primary_image_url, featured, active)
+VALUES (
+  'uv-printed-candle-tin', 'UV-Printed Personalized Candle Tin', 'Soy candle in a custom UV-printed tin. Upload a photo or design, or choose a preset, and pick your scent.',
+  (SELECT id FROM categories WHERE name = 'Candle Tins'),
+  'uv_print', 1500, NULL, 1, 1
+);
+INSERT INTO variant_option_types (product_id, name, sort_order)
+VALUES ((SELECT id FROM products WHERE slug = 'uv-printed-candle-tin'), 'Scent', 0);
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ((SELECT id FROM variant_option_types WHERE product_id = (SELECT id FROM products WHERE slug = 'uv-printed-candle-tin') AND name = 'Scent'), 'Vanilla', 0);
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ((SELECT id FROM variant_option_types WHERE product_id = (SELECT id FROM products WHERE slug = 'uv-printed-candle-tin') AND name = 'Scent'), 'Lavender', 1);
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ((SELECT id FROM variant_option_types WHERE product_id = (SELECT id FROM products WHERE slug = 'uv-printed-candle-tin') AND name = 'Scent'), 'Sandalwood', 2);
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ((SELECT id FROM variant_option_types WHERE product_id = (SELECT id FROM products WHERE slug = 'uv-printed-candle-tin') AND name = 'Scent'), 'Unscented', 3);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'uv-printed-candle-tin'), 'TIN-VAN', '{"Scent": "Vanilla"}', 0, 30);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'uv-printed-candle-tin'), 'TIN-LAV', '{"Scent": "Lavender"}', 0, 30);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'uv-printed-candle-tin'), 'TIN-SAN', '{"Scent": "Sandalwood"}', 0, 25);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'uv-printed-candle-tin'), 'TIN-UNS', '{"Scent": "Unscented"}', 0, 25);
+INSERT INTO personalization_fields (product_id, field_key, label, field_type, required, max_length, help_text, options, sort_order)
+VALUES ((SELECT id FROM products WHERE slug = 'uv-printed-candle-tin'), 'custom_image', 'Upload Your Image (optional)', 'image_upload',
+  0, NULL,
+  'JPG or PNG, min 1000x1000px, leave blank to use a preset design', NULL, 0);
+INSERT INTO personalization_fields (product_id, field_key, label, field_type, required, max_length, help_text, options, sort_order)
+VALUES ((SELECT id FROM products WHERE slug = 'uv-printed-candle-tin'), 'tin_caption', 'Caption Text (optional)', 'text',
+  0, 28,
+  'Appears below the image or design', NULL, 1);
+INSERT INTO add_ons (product_id, add_on_key, label, description, price_cents, requires_input, input_type, input_label, input_max_length, sort_order)
+VALUES ((SELECT id FROM products WHERE slug = 'uv-printed-candle-tin'), 'gift_box', 'Add Gift Box', 'Arrives wrapped in a kraft gift box, ready to give',
+  400, 0, NULL, NULL,
+  NULL, 0);
+DELETE FROM products WHERE slug = 'memorial-engraved-keychain';
+INSERT INTO products (slug, title, description, category_id, technique, base_price_cents, primary_image_url, featured, active)
+VALUES (
+  'memorial-engraved-keychain', 'Memorial Engraved Keychain', 'A keepsake engraved keychain to honor a loved one, with name and date. Handled with care -- proof sent before production on request.',
+  (SELECT id FROM categories WHERE name = 'Keychains'),
+  'engraving', 1800, NULL, 0, 1
+);
+INSERT INTO variant_option_types (product_id, name, sort_order)
+VALUES ((SELECT id FROM products WHERE slug = 'memorial-engraved-keychain'), 'Color', 0);
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ((SELECT id FROM variant_option_types WHERE product_id = (SELECT id FROM products WHERE slug = 'memorial-engraved-keychain') AND name = 'Color'), 'Black', 0);
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ((SELECT id FROM variant_option_types WHERE product_id = (SELECT id FROM products WHERE slug = 'memorial-engraved-keychain') AND name = 'Color'), 'Brown', 1);
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ((SELECT id FROM variant_option_types WHERE product_id = (SELECT id FROM products WHERE slug = 'memorial-engraved-keychain') AND name = 'Color'), 'Silver', 2);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'memorial-engraved-keychain'), 'MEM-BLK', '{"Color": "Black"}', 0, 15);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'memorial-engraved-keychain'), 'MEM-BRN', '{"Color": "Brown"}', 0, 15);
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ((SELECT id FROM products WHERE slug = 'memorial-engraved-keychain'), 'MEM-SLV', '{"Color": "Silver"}', 0, 10);
+INSERT INTO personalization_fields (product_id, field_key, label, field_type, required, max_length, help_text, options, sort_order)
+VALUES ((SELECT id FROM products WHERE slug = 'memorial-engraved-keychain'), 'memorial_name', 'Name', 'text',
+  1, 22,
+  'Full name or nickname, as it should appear', NULL, 0);
+INSERT INTO personalization_fields (product_id, field_key, label, field_type, required, max_length, help_text, options, sort_order)
+VALUES ((SELECT id FROM products WHERE slug = 'memorial-engraved-keychain'), 'memorial_dates', 'Dates (optional)', 'text',
+  0, 20,
+  'e.g. 1958 - 2024', NULL, 1);
+INSERT INTO personalization_fields (product_id, field_key, label, field_type, required, max_length, help_text, options, sort_order)
+VALUES ((SELECT id FROM products WHERE slug = 'memorial-engraved-keychain'), 'memorial_message', 'Short Message (optional)', 'textarea',
+  0, 60,
+  'A brief phrase, e.g. Forever in our hearts', NULL, 2);
+INSERT INTO add_ons (product_id, add_on_key, label, description, price_cents, requires_input, input_type, input_label, input_max_length, sort_order)
+VALUES ((SELECT id FROM products WHERE slug = 'memorial-engraved-keychain'), 'gift_box', 'Add Gift Box', 'Arrives wrapped in a kraft gift box, ready to give',
+  400, 0, NULL, NULL,
+  NULL, 0);
+COMMIT;

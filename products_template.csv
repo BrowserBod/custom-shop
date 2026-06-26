@@ -1,0 +1,285 @@
+#!/usr/bin/env python3
+"""
+CSV -> D1 import script.
+
+Reads products_template.csv (or any CSV in that format) and generates a
+.sql file of INSERT statements to run against your D1 database via:
+
+    wrangler d1 execute custom-shop-db --remote --file=import_output.sql
+
+This script does NOT hit the network -- it only generates SQL locally,
+so you can review the output before running it against the real database.
+
+Usage:
+    python3 import_products.py products.csv import_output.sql
+"""
+
+import csv
+import sys
+import re
+import json
+from itertools import product as cartesian_product
+
+
+def esc(value):
+    """Escape a value for safe SQL string literal insertion."""
+    if value is None:
+        return "NULL"
+    s = str(value).replace("'", "''")
+    return f"'{s}'"
+
+
+def parse_price_to_cents(price_str):
+    return int(round(float(price_str) * 100))
+
+
+def parse_pipe_list(s):
+    if not s or not s.strip():
+        return []
+    return [v.strip() for v in s.split("|") if v.strip()]
+
+
+def parse_personalization_fields(raw):
+    """
+    Format per field: type:key:label:required:max_length:help_text[:opt1|opt2|...]
+    Multiple fields separated by |  -- but dropdown options also use | internally,
+    so dropdown fields use this exact shape:
+        dropdown:key:label:required::help_text:Option1|Option2|Option3
+    To avoid ambiguity, we split top-level fields on the pattern "|TYPE:" boundaries.
+
+    NOTE: exactly 7 colon-separated parts are required for ANY field --
+    type:key:label:required:max_length:help_text:options
+    If a field has no help_text and no options, leave both segments empty:
+        text:engraved_name:Name to Engrave:1:20::
+    If a field has help_text but no options (the common case), leave the
+    trailing options segment empty:
+        text:engraved_name:Name to Engrave:1:20:Letters and numbers only:
+    """
+    if not raw or not raw.strip():
+        return []
+
+    # Split fields by lookahead for a valid type keyword at a "|" boundary
+    field_types = ["text", "textarea", "image_upload", "dropdown", "font_choice"]
+    pattern = r"\|(?=(?:" + "|".join(field_types) + r"):)"
+    raw_fields = re.split(pattern, raw.strip())
+
+    fields = []
+    for rf in raw_fields:
+        parts = rf.split(":")
+        if len(parts) < 6:
+            print(f"  WARNING: skipping malformed personalization field (need at least 6 colon-separated parts): {rf}")
+            continue
+        field_type, key, label, required, max_length, help_text = parts[:6]
+        # Everything after the 6th colon is the options segment, even if it
+        # contains further colons (shouldn't normally happen, but join just in case)
+        options = ":".join(parts[6:]) if len(parts) > 6 else None
+        fields.append({
+            "field_type": field_type.strip(),
+            "field_key": key.strip(),
+            "label": label.strip(),
+            "required": 1 if required.strip() in ("1", "true", "True") else 0,
+            "max_length": int(max_length) if max_length.strip() else None,
+            "help_text": help_text.strip() or None,
+            "options": parse_pipe_list(options) if options else None,
+        })
+    return fields
+
+
+def parse_add_ons(raw):
+    """
+    Format per add-on: key:label:price:requires_input:input_type:input_label:max_length:description
+    Multiple add-ons separated by |
+    Example:
+        back_engraving:Add Back Engraving:5.00:1:text:Back Engraving Text:30:A short message or date on the back
+        gift_box:Add Gift Box:4.00:0::::Comes wrapped and ready to give
+    requires_input is 1 or 0. If 0, leave input_type/input_label/max_length empty.
+    """
+    if not raw or not raw.strip():
+        return []
+    entries = []
+    for chunk in raw.split("|"):
+        parts = chunk.split(":")
+        if len(parts) < 8:
+            print(f"  WARNING: skipping malformed add-on (need 8 colon-separated parts): {chunk}")
+            continue
+        key, label, price, requires_input, input_type, input_label, max_length, description = parts[:8]
+        entries.append({
+            "add_on_key": key.strip(),
+            "label": label.strip(),
+            "price_cents": parse_price_to_cents(price),
+            "requires_input": 1 if requires_input.strip() in ("1", "true", "True") else 0,
+            "input_type": input_type.strip() or None,
+            "input_label": input_label.strip() or None,
+            "input_max_length": int(max_length) if max_length.strip() else None,
+            "description": description.strip() or None,
+        })
+    return entries
+
+
+def parse_variant_data(raw):
+    """Format: SKU:price_modifier_cents:stock_count|SKU2:price_modifier_cents:stock_count"""
+    if not raw or not raw.strip():
+        return []
+    entries = []
+    for chunk in raw.split("|"):
+        parts = chunk.split(":")
+        if len(parts) != 3:
+            print(f"  WARNING: skipping malformed variant entry: {chunk}")
+            continue
+        sku, price_mod, stock = parts
+        entries.append({
+            "sku": sku.strip(),
+            "price_modifier_cents": int(price_mod),
+            "stock_count": int(stock) if stock.strip() else None,
+        })
+    return entries
+
+
+def main():
+    if len(sys.argv) < 3:
+        print("Usage: python3 import_products.py <input.csv> <output.sql>")
+        sys.exit(1)
+
+    input_path = sys.argv[1]
+    output_path = sys.argv[2]
+
+    sql_statements = []
+    sql_statements.append("-- Auto-generated import. Review before running against production D1.")
+    sql_statements.append("BEGIN TRANSACTION;")
+
+    seen_categories = set()
+    row_count = 0
+    warnings = []
+
+    with open(input_path, newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            row_count += 1
+            slug = row["product_slug"].strip()
+            title = row["title"].strip()
+            description = row.get("description", "").strip()
+            category = row["category"].strip()
+            technique = row.get("technique", "").strip()
+            base_price_cents = parse_price_to_cents(row["base_price"])
+            primary_image_url = row.get("primary_image_url", "").strip() or None
+            featured = 1 if row.get("featured", "0").strip() == "1" else 0
+            active = 1 if row.get("active", "1").strip() == "1" else 0
+
+            # Ensure category exists (idempotent insert)
+            if category not in seen_categories:
+                cat_slug = re.sub(r"[^a-z0-9]+", "-", category.lower()).strip("-")
+                sql_statements.append(
+                    f"INSERT OR IGNORE INTO categories (slug, name) VALUES ({esc(cat_slug)}, {esc(category)});"
+                )
+                seen_categories.add(category)
+
+            # Upsert product. Using INSERT OR REPLACE would wipe the id and
+            # break variant/personalization foreign keys on re-import, so we
+            # delete-then-insert within the transaction instead, scoped by slug.
+            # (ON DELETE CASCADE on variants/personalization_fields/add_ons
+            # handles cleanup of child rows automatically when the product row is deleted.)
+            sql_statements.append(
+                f"DELETE FROM products WHERE slug = {esc(slug)};"
+            )
+            sql_statements.append(f"""
+INSERT INTO products (slug, title, description, category_id, technique, base_price_cents, primary_image_url, featured, active)
+VALUES (
+  {esc(slug)}, {esc(title)}, {esc(description)},
+  (SELECT id FROM categories WHERE name = {esc(category)}),
+  {esc(technique)}, {base_price_cents}, {esc(primary_image_url)}, {featured}, {active}
+);""".strip())
+
+            product_ref = f"(SELECT id FROM products WHERE slug = {esc(slug)})"
+
+            # Option types + values
+            option_defs = []  # [(name, [values]), ...]
+            for opt_num in (1, 2):
+                opt_name = row.get(f"option{opt_num}_name", "").strip()
+                opt_values_raw = row.get(f"option{opt_num}_values", "").strip()
+                if opt_name and opt_values_raw:
+                    values = parse_pipe_list(opt_values_raw)
+                    option_defs.append((opt_name, values))
+
+            for sort_idx, (opt_name, values) in enumerate(option_defs):
+                sql_statements.append(f"""
+INSERT INTO variant_option_types (product_id, name, sort_order)
+VALUES ({product_ref}, {esc(opt_name)}, {sort_idx});""".strip())
+                opt_type_ref = (
+                    f"(SELECT id FROM variant_option_types WHERE product_id = {product_ref} "
+                    f"AND name = {esc(opt_name)})"
+                )
+                for v_idx, val in enumerate(values):
+                    sql_statements.append(f"""
+INSERT INTO variant_option_values (option_type_id, value, sort_order)
+VALUES ({opt_type_ref}, {esc(val)}, {v_idx});""".strip())
+
+            # Variants: generate the cartesian product of option values in
+            # the SAME order as they appear in variant_skus_prices_stock
+            variant_entries = parse_variant_data(row.get("variant_skus_prices_stock", ""))
+            if option_defs:
+                option_value_lists = [vals for (_name, vals) in option_defs]
+                option_names = [name for (name, _vals) in option_defs]
+                combos = list(cartesian_product(*option_value_lists))
+
+                if len(combos) != len(variant_entries):
+                    warnings.append(
+                        f"Row '{slug}': {len(combos)} option combinations generated "
+                        f"but {len(variant_entries)} variant entries provided. "
+                        f"Check column order matches Color/Size nesting (first option "
+                        f"varies slowest). Skipping variant insert for this product."
+                    )
+                else:
+                    for combo, ventry in zip(combos, variant_entries):
+                        option_values_dict = dict(zip(option_names, combo))
+                        option_values_json = json.dumps(option_values_dict)
+                        sql_statements.append(f"""
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ({product_ref}, {esc(ventry['sku'])}, {esc(option_values_json)}, {ventry['price_modifier_cents']}, {ventry['stock_count'] if ventry['stock_count'] is not None else 'NULL'});""".strip())
+            elif variant_entries:
+                # no options defined but variant data given -- single default variant(s)
+                for ventry in variant_entries:
+                    sql_statements.append(f"""
+INSERT INTO variants (product_id, sku, option_values, price_modifier_cents, stock_count)
+VALUES ({product_ref}, {esc(ventry['sku'])}, '{{}}', {ventry['price_modifier_cents']}, {ventry['stock_count'] if ventry['stock_count'] is not None else 'NULL'});""".strip())
+
+            # Personalization fields
+            fields = parse_personalization_fields(row.get("personalization_fields", ""))
+            for f_idx, field in enumerate(fields):
+                if field["options"]:
+                    # Build real JSON first, THEN escape the whole thing as one SQL string.
+                    options_json_str = json.dumps(field["options"])
+                    options_sql = esc(options_json_str)
+                else:
+                    options_sql = "NULL"
+                sql_statements.append(f"""
+INSERT INTO personalization_fields (product_id, field_key, label, field_type, required, max_length, help_text, options, sort_order)
+VALUES ({product_ref}, {esc(field['field_key'])}, {esc(field['label'])}, {esc(field['field_type'])},
+  {field['required']}, {field['max_length'] if field['max_length'] is not None else 'NULL'},
+  {esc(field['help_text'])}, {options_sql}, {f_idx});""".strip())
+
+            # Add-ons (optional upsells: back engraving, gift box, etc.)
+            add_ons = parse_add_ons(row.get("add_ons", ""))
+            for a_idx, addon in enumerate(add_ons):
+                sql_statements.append(f"""
+INSERT INTO add_ons (product_id, add_on_key, label, description, price_cents, requires_input, input_type, input_label, input_max_length, sort_order)
+VALUES ({product_ref}, {esc(addon['add_on_key'])}, {esc(addon['label'])}, {esc(addon['description'])},
+  {addon['price_cents']}, {addon['requires_input']}, {esc(addon['input_type'])}, {esc(addon['input_label'])},
+  {addon['input_max_length'] if addon['input_max_length'] is not None else 'NULL'}, {a_idx});""".strip())
+
+    sql_statements.append("COMMIT;")
+
+    with open(output_path, "w", encoding="utf-8") as out:
+        out.write("\n".join(sql_statements) + "\n")
+
+    print(f"Processed {row_count} product rows.")
+    print(f"SQL written to: {output_path}")
+    if warnings:
+        print(f"\n{len(warnings)} WARNING(S):")
+        for w in warnings:
+            print(f"  - {w}")
+    print("\nReview the SQL file, then run:")
+    print(f"  wrangler d1 execute custom-shop-db --remote --file={output_path}")
+
+
+if __name__ == "__main__":
+    main()
